@@ -1,5 +1,7 @@
 import $ from 'jquery';
 import Renderer from './lib/Renderer';
+import Question from './Question';
+import Quiz from './Quiz';
 
 class QuizDisplay extends Renderer {
   getEvents() {
@@ -24,19 +26,44 @@ class QuizDisplay extends Renderer {
     `;
   }
 
+  _generateQuestion(){
+    console.log(this.model.asked[0].answers.length);
+    let question = '';
+    for (let i = 0; i < this.model.asked[0].answers.length; i++){
+      question += `<input type="radio">${this.model.asked[0].answers[i]}</input>
+        <br>`;
+    }
+    console.log(question);
+    
+    return `
+      <div>
+        <h1>${this.model.asked[0].text}</h1>
+        <form>
+        ${question}
+        </form>
+        <div class="buttons">
+        <button class="next-question">Next Question</button>
+      </div>
+      </div>`;
+  } 
+
+
   template() {
     let html = '';
     
     if (this.model.asked.length === 0) {
       // Quiz has not started
       html = this._generateIntro();
+    }  
+    else if (this.model.asked.length > 0){
+      html = this._generateQuestion();
     }
     
     return html;
   }
 
   handleStart() {
-    this.model.startNewGame();
+    this.model.startGame();
   }
 }
 

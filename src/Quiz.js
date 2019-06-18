@@ -7,6 +7,7 @@ class Quiz extends Model {
   static DEFAULT_QUIZ_LENGTH = 2;
 
   constructor() {
+    super();
     // Array of Question instances
     this.unasked = [];
     // Array of Question instances
@@ -30,12 +31,15 @@ class Quiz extends Model {
     triviaApi.fetchQuestions(Quiz.DEFAULT_QUIZ_LENGTH)
       .then(data => {
         data.results.forEach(questionData => {
-          this.unasked.push(new Question(questionData));
+          this.unasked.push(new Question(questionData))
+          console.log(questionData.question);
           this.nextQuestion();
           this.active = true;
+          this.update();
         });
       })
       .catch(err => console.log(err.message));
+      this.update();
   }
 
   getCurrentQuestion() {
