@@ -17,4 +17,4 @@ class Model {
   }
 }
 
-export default Model;
+export default Model; 

@@ -1,40 +1,47 @@
-// Attrs:
-//   text (string)           - Question text
-//   answers (array)         - Array of strings, each a unique answer
-//   correctAnswer (string)  - Correct answer string, must match at least one element of answers array
-//   userAnswer (string)     - Answer provided by user
-
-// Methods:
-//   submitAnswer(answer: string)  - sets the userAnswer prop
-//   answerStatus()                - returns {Integer} indicating question's state:
-//                                   -1: unanswered, 0: answered incorrectly, 1: answered correctly
-
 class Question {
-  constructor(text, answers, correctAnswer){
-    this.text=text;
-    this.answers=[];
-    this.correctAnswer=correctAnswer;
-    this.userAnswer = '';
-        
+  constructor(questionData) {
+    this.text = questionData.question;
+    this.answers = [questionData.correct_answer, ...questionData.incorrect_answers];
+    this.correctAnswer = questionData.correct_answer;
+    this.userAnswer = null;
+    this._shuffle(this.answers); 
   }
 
-  submitAnswer(userInput){
-    return this.userAnswer = userInput;
+  _shuffle(arr) {
+    let currentIndex = arr.length;
+    let temporaryValue, randomIndex;
+  
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+  
+      temporaryValue = arr[currentIndex];
+      arr[currentIndex] = arr[randomIndex];
+      arr[randomIndex] = temporaryValue;
+    }
+  
+    return arr;
   }
 
-  answerStatus(){
-    if(this.userAnswer === ''){
-      return 0;
-    }
-    if(this.userAnswer === this.correctAnswer){
-      return 1;
-    }
-    if(this.userAnswer !== this.correctAnswer){
-      return 0;
-    }
-    else{
+  submitAnswer(answer) {
+    this.userAnswer = answer;
+  }
+
+  /**
+   * Returns integer for question status:
+   * -1 = unanswered
+   *  0 = answered, incorrect
+   *  1 = answered, correct
+   */
+  getAnswerStatus() {
+    if (this.userAnswer === null) {
       return -1;
+    } else if (this.userAnswer === this.correctAnswer) {
+      return 1;
+    } else {
+      return 0;
     }
-  }
+  }  
 }
+
 export default Question;

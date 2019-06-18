@@ -1,35 +1,31 @@
-/* eslint-disable no-undef */
+
 class TriviaApi {
-  constructor(){
-    this.baseUrl = 'https://opentdb.com/api.php?amount=5&type=multiple';
-  }
-  listApiFetch(...args) { 
-    let error; 
-    return fetch(...args)
-      .then(res => { 
-        if (!res.ok) { error = { code: res.status };
+  static BASE_URL = 'https://opentdb.com/api.php';
+
+  fetchQuestions(count) {
+    const url = new URL(TriviaApi.BASE_URL);
+    url.searchParams.set('amount', count);
+    console.log(url);
+    return fetch(url)
+      .then(res => {
+        // if non-2xx response, reject promise with status text
+        if (!res.ok) {
+          return Promise.reject({ message: res.statusText });
         }
+        // Otherwise, parse the json body
         return res.json();
       })
-      .then(data => {    
-        if (error) {
-          error.message = data.message;
-          return Promise.reject(error);
-        }    
-        return data;
-      });  
-  }
+      .then(data => {
+        // if JSON message holds code above 0, reject promise with message
+        if (data.response_code !== 0) {
+          return Promise.reject({ message: `API returned error code: ${data.response_code}. Try a different request.`});
+        }
 
-  getQuestions(){
-    return listApiFetch(this.baseUrl);
-    // this.listApiFetch(`${this.BASEURL}?amount=10`)
-    //   .then(res => {
-    //     console.log('this is a response' + res);
-    //     let data = res['results'][0];
-    //     console.log(data);
-    //   });      
+        // Otherwise, success! Return the data to automatically resolve the promise successfully.
+        console.log(data);
+        return data;
+      });
   }
 }
+
 export default TriviaApi;
-//let myObj = new TriviaApi;
-//myObj.getQuestions();
