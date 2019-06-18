@@ -32,7 +32,7 @@ class Quiz extends Model {
       .then(data => {
         data.results.forEach(questionData => {
           this.unasked.push(new Question(questionData))
-          console.log(questionData.question);
+         // console.log(questionData.question);
           this.nextQuestion();
           this.active = true;
           this.update();

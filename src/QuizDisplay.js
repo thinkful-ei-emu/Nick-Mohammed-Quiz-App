@@ -7,6 +7,7 @@ class QuizDisplay extends Renderer {
   getEvents() {
     return {
       'click .start-quiz': 'handleStart',
+      
     };
   }
 
@@ -30,7 +31,7 @@ class QuizDisplay extends Renderer {
     console.log(this.model.asked[0].answers.length);
     let question = '';
     for (let i = 0; i < this.model.asked[0].answers.length; i++){
-      question += `<input type="radio">${this.model.asked[0].answers[i]}</input>
+      question += `<input type="radio" name="choices">${this.model.asked[0].answers[i]}
         <br>`;
     }
     console.log(question);
@@ -46,6 +47,45 @@ class QuizDisplay extends Renderer {
       </div>
       </div>`;
   } 
+
+  _generateCorrectAnswer() { 
+    return `
+      <div> 
+        <p> ${this.model.asked[0].text} </p>
+        <p> You got it! </p> 
+        <p> The correct answer was: </p>
+          <p> ${this.model.asked[0].correctAnswer} </p> 
+      </div> 
+      <div class="buttons"> 
+        <button class=".next-question">Continue</button>
+      </div>;`;
+  }
+
+  _generateIncorrectAnswer() { 
+    return `
+      <div> 
+        <p> ${this.model.asked[0].text} </p> 
+        <p> Sorry, that's incorrect. </p> 
+        <p> You answered: </p> 
+          <p> ${this.model.asked[0].userAnswer} </p> 
+        <p> The correct answer was: </p> 
+          <p> ${this.model.asked[0].correctAnswer} </p> 
+      </div> 
+      <div class="buttons"> 
+            <button class=".next-question">Continue</button> 
+      </div>`; 
+  }
+
+  _generateOutro() { 
+    return ` 
+      <div> 
+        <p> Good job! </p>
+        <p> Your final score was ${this.model.score} out of 5. </p>        
+      </div>
+      <div class="buttons">
+      <button class="start-quiz">Play Again</button>
+      </div>`;
+  }
 
 
   template() {
@@ -64,7 +104,7 @@ class QuizDisplay extends Renderer {
 
   handleStart() {
     this.model.startGame();
-  }
+  } 
 }
 
 export default QuizDisplay;
