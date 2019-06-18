@@ -1,8 +1,7 @@
 import Question from './Question';
 
 class Quiz {
-
-  static DEFAULT_QUIZ_LENGTH = 2;
+  gistatic DEFAULT_QUIZ_LENGTH = 2;
 
   constructor() {
     // Array of Question instances
@@ -12,11 +11,12 @@ class Quiz {
     this.active = false;
 
     // TASK: Add more props here per the exercise
-
+    this.score  = 0;
+    this.scoreHistory = [];
   }
 
   // Example method:
-  startGame() {
+  setActive() {
     this.active = true;
   }
 }
