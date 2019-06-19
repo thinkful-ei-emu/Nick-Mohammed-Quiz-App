@@ -7,7 +7,10 @@ class QuizDisplay extends Renderer {
   getEvents() {
     return {
       'click .start-quiz': 'handleStart',
-      'click .submit-question': 'handleAnswerSubmit',
+      'submit #submit-form': 'handleAnswerSubmit',
+      'click .next-question': 'handleContinue',
+      'click .replay-quiz' : 'handleEnd',
+
     };
   }
 
@@ -28,10 +31,10 @@ class QuizDisplay extends Renderer {
   }
 
   _generateQuestion(){
-    console.log(this.model.asked[0].answers.length);
+    console.log(this.model);
     let question = '';
     for (let i = 0; i < this.model.asked[0].answers.length; i++){
-      question += `<input type="radio" name="choices">${this.model.asked[0].answers[i]}
+      question += `<input type="radio" name="choices" value="${this.model.asked[0].answers[i]}">${this.model.asked[0].answers[i]}
         <br>`;
     }
     console.log(question);
@@ -39,17 +42,18 @@ class QuizDisplay extends Renderer {
     return `
       <div>
         <h1>${this.model.asked[0].text}</h1>
-        <form>
+        <form id="submit-form">
         ${question}
-        </form>
         <div class="buttons">
-        <button class="submit-question">Submit</button>
+        <button type="submit" class="submit-question">Submit</button>
       </div>
+        </form>
+        
       </div>`;
   }
 
   _generateAnswer() { 
-    if (this.model.userAnswer === this.model.correctAnswer){
+    if (this.model.getCurrentQuestion().getAnswerStatus() === 1){
       return `
       <div> 
         <p> ${this.model.asked[0].text} </p>
@@ -58,7 +62,7 @@ class QuizDisplay extends Renderer {
           <p> ${this.model.asked[0].correctAnswer} </p> 
       </div> 
       <div class="buttons"> 
-        <button class=".next-question">Continue</button>
+        <button class="next-question">Continue</button>
       </div>;`;
     }
     else { 
@@ -72,7 +76,7 @@ class QuizDisplay extends Renderer {
           <p> ${this.model.asked[0].correctAnswer} </p> 
       </div> 
       <div class="buttons"> 
-            <button class=".next-question">Continue</button> 
+            <button class="next-question">Continue</button> 
       </div>`; 
     }
   }
@@ -86,13 +90,38 @@ class QuizDisplay extends Renderer {
         <p> Your final score was ${this.model.score} out of 5. </p>        
       </div>
       <div class="buttons">
-      <button class="start-quiz">Play Again</button>
+      <button class="replay-quiz">Play Again</button>
       </div>`;
   }
     
-  handleAnswerSubmit(){
-    this.model.answerCurrentQuestion(this.model.userAnswer);
+  handleAnswerSubmit(e){
+    e.preventDefault();
+    console.log('hello');
+    const userAnswer = new FormData(e.target).get('choices');
+    console.log(userAnswer);
+    this.model.answerCurrentQuestion(userAnswer);
     this.model.update();
+    
+    this.renderAll();
+    
+    // const userAnswer = $('input[name=\'choices\']:checked').val();
+    // this.model.answerCurrentQuestion(userAnswer);
+    // console.log('hi' + this.model.asked[0].correctAnswer);
+    // console.log(userAnswer);
+    // this._generateAnswer();
+    // this.model.update();
+    // this.renderAll();
+  }
+
+  handleContinue(){
+    if(this.model.nextQuestion()){
+      this._generateQuestion();
+    }
+    if (this.model.unasked.length === 0){
+      this.model.active = false;
+      this.model.update();
+    }
+    this.renderAll();
   }
 
 
@@ -103,9 +132,12 @@ class QuizDisplay extends Renderer {
       // Quiz has not started
       html = this._generateIntro();
     } 
-    // else if (this.model.userAnswer !== null){
-    //   html = this._generateAnswer();
-    // } 
+    else if (this.model.getCurrentQuestion().getAnswerStatus() !== -1){
+      html = this._generateAnswer();
+    } 
+    else if (this.model.active === false){
+      html = this._generateOutro();
+    }
     else {
       html = this._generateQuestion();
     }
@@ -116,7 +148,12 @@ class QuizDisplay extends Renderer {
 
   handleStart() {
     this.model.startGame();
-  } 
+  }
+
+  handleEnd(){
+    this.model.startGame();
+    this.renderAll();
+  }
 }
 
 export default QuizDisplay;
