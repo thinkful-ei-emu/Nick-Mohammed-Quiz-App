@@ -4,7 +4,7 @@ import Model from './lib/Model';
 
 class Quiz extends Model {
 
-  static DEFAULT_QUIZ_LENGTH = 2;
+  static DEFAULT_QUIZ_LENGTH = 5;
 
   constructor() {
     super();
@@ -32,7 +32,6 @@ class Quiz extends Model {
       .then(data => {
         data.results.forEach(questionData => {
           this.unasked.push(new Question(questionData))
-         // console.log(questionData.question);
           this.nextQuestion();
           this.active = true;
           this.update();

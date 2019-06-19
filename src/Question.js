@@ -41,6 +41,7 @@ class Question {
     } else {
       return 0;
     }
+
   }  
 }
 

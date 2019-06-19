@@ -96,7 +96,6 @@ class QuizDisplay extends Renderer {
     
   handleAnswerSubmit(e){
     e.preventDefault();
-    console.log('hello');
     const userAnswer = new FormData(e.target).get('choices');
     console.log(userAnswer);
     this.model.answerCurrentQuestion(userAnswer);
@@ -114,14 +113,16 @@ class QuizDisplay extends Renderer {
   }
 
   handleContinue(){
-    if(this.model.nextQuestion()){
-      this._generateQuestion();
-    }
-    if (this.model.unasked.length === 0){
+    console.log(this.model.unasked);
+    this.model.scoreHistory.push(this.model.score);
+    if(this.model.unasked.length === 0){
       this.model.active = false;
       this.model.update();
     }
-    this.renderAll();
+    else {
+      this.model.nextQuestion();
+      this.model.update();
+    }
   }
 
 
@@ -131,13 +132,13 @@ class QuizDisplay extends Renderer {
     if (this.model.asked.length === 0) {
       // Quiz has not started
       html = this._generateIntro();
-    } 
-    else if (this.model.getCurrentQuestion().getAnswerStatus() !== -1){
-      html = this._generateAnswer();
-    } 
+    }
     else if (this.model.active === false){
       html = this._generateOutro();
     }
+    else if (this.model.getCurrentQuestion().getAnswerStatus() !== -1){
+      html = this._generateAnswer();
+    } 
     else {
       html = this._generateQuestion();
     }
@@ -151,8 +152,8 @@ class QuizDisplay extends Renderer {
   }
 
   handleEnd(){
-    this.model.startGame();
-    this.renderAll();
+    this.model.asked = [];
+    this.model.update();   
   }
 }
 

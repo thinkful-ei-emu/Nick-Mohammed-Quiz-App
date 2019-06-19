@@ -8,14 +8,25 @@ class QuizStatus extends Renderer {
       x = 'Inactive'; 
     } 
     else {
-      x = this.model.asked.length; 
+      x = `${this.model.asked.length} out of 5`; 
+    }
+
+    let highscore = 0;
+    for (let i = 0; i < this.model.scoreHistory.length; i++){
+      if (this.model.score > this.model.scoreHistory[i]){
+        this.model.scoreHistory.push(this.model.score);
+        highscore = this.model.score;
+      } else {
+        highscore = Math.max(...this.model.scoreHistory);
+      }
+
     }
 
     return `
       <div class="current-status">
         <span class="current-score">Score: ${this.model.score}</span>
-        <span class="current-highscore">High Score: 0</span>
-        <span class="current-progress">Progress: ${x} out of 5</span>
+        <span class="current-highscore">High Score: ${highscore}</span>
+        <span class="current-progress">Progress: ${x}</span>
       </div>
     `;
   }
