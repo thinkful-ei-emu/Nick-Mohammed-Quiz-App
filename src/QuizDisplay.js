@@ -31,7 +31,8 @@ class QuizDisplay extends Renderer {
     //console.log(this.model.asked[0].answers.length);
     let question = '';
     for (let i = 0; i < this.model.asked[0].answers.length; i++){
-      question += `<input type="radio" name="choices">${this.model.asked[0].answers[i]}
+      question += `<input type="radio" name ="choices" value = "${this.model.asked[0].answers[i]}">
+        <span>${this.model.asked[0].answers[i]}</span>
         <br>`;
     }
     //console.log(question);
@@ -90,8 +91,11 @@ class QuizDisplay extends Renderer {
       </div>`;
   }
     
-  handleAnswerSubmit(){
+  handleAnswerSubmit(e){
+    //e.preventDefault();
+    this.model.userAnswer = $('form').find('input[name=\'choices\']:checked').val();
     this.model.answerCurrentQuestion(this.model.userAnswer);
+    console.log('the answer is' + this.model.userAnswer);
     this.model.update();
   }
 
