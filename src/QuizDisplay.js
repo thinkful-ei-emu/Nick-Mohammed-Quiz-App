@@ -16,7 +16,7 @@ class QuizDisplay extends Renderer {
 
   _generateIntro() {
     return `
-      <div>
+      <div class"intro-page">
         <p>
           Welcome to the Trivia Quiz
         </p>
