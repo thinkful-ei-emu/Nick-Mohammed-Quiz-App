@@ -37,7 +37,7 @@ class QuizDisplay extends Renderer {
       question += `<input type="radio" name="choices" value="${this.model.asked[0].answers[i]}">${this.model.asked[0].answers[i]}
         <br>`;
     }
-    console.log(question);
+    //console.log(question);
     
     return `
       <div>
