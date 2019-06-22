@@ -37,7 +37,6 @@ class QuizDisplay extends Renderer {
       question += `<input type="radio" name="choices" value="${this.model.asked[0].answers[i]}">${this.model.asked[0].answers[i]}
         <br>`;
     }
-    //console.log(question);
     
     return `
       <div>
@@ -102,14 +101,6 @@ class QuizDisplay extends Renderer {
     this.model.update();
     
     this.renderAll();
-    
-    // const userAnswer = $('input[name=\'choices\']:checked').val();
-    // this.model.answerCurrentQuestion(userAnswer);
-    // console.log('hi' + this.model.asked[0].correctAnswer);
-    // console.log(userAnswer);
-    // this._generateAnswer();
-    // this.model.update();
-    // this.renderAll();
   }
 
   handleContinue(){
